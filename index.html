@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cuarto corte calculator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="shortcut icon" href="assets/logo.png" type="image/x-icon">
+<style>
+
+:root{
+    --bg:#0f172a;
+    --card:#1e293b;
+    --card2:#111827;
+    --accent:#3b82f6;
+    --accent2:#8b5cf6;
+    --success:#22c55e;
+    --danger:#ef4444;
+    --text:#f8fafc;
+    --muted:#94a3b8;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:linear-gradient(
+        135deg,
+        #0f172a,
+        #111827,
+        #1e293b
+    );
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:30px;
+}
+
+.container{
+    width:100%;
+    max-width:950px;
+}
+
+.header{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.header h1{
+    font-size:2.4rem;
+}
+
+.header span{
+    background:linear-gradient(
+        90deg,
+        var(--accent),
+        var(--accent2)
+    );
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.dashboard{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px;
+}
+
+.card{
+    background:rgba(30,41,59,.8);
+    backdrop-filter:blur(14px);
+    border:1px solid rgba(255,255,255,.05);
+    border-radius:20px;
+    padding:25px;
+    animation:fadeUp .6s ease;
+}
+
+@keyframes fadeUp{
+    from{
+        opacity:0;
+        transform:translateY(15px);
+    }
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+.card h2{
+    margin-bottom:20px;
+    font-size:1.1rem;
+}
+
+.input-group{
+    margin-bottom:15px;
+}
+
+.input-group label{
+    display:block;
+    margin-bottom:6px;
+    color:var(--muted);
+}
+
+.input-group input{
+    width:100%;
+    padding:12px;
+    border:none;
+    outline:none;
+    border-radius:12px;
+    background:#0f172a;
+    color:white;
+    font-size:1rem;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    color:white;
+    font-weight:600;
+    font-size:1rem;
+    background:linear-gradient(
+        90deg,
+        var(--accent),
+        var(--accent2)
+    );
+    transition:.3s;
+}
+
+button:hover{
+    transform:translateY(-2px);
+}
+
+.metric{
+    margin-bottom:20px;
+}
+
+.metric-title{
+    color:var(--muted);
+    margin-bottom:5px;
+}
+
+.metric-value{
+    font-size:2rem;
+    font-weight:700;
+}
+
+.progress-container{
+    margin-top:15px;
+}
+
+.progress-bar{
+    height:16px;
+    background:#0f172a;
+    border-radius:999px;
+    overflow:hidden;
+}
+
+.progress{
+    height:100%;
+    width:0%;
+    transition:1s;
+    background:linear-gradient(
+        90deg,
+        var(--success),
+        #4ade80
+    );
+}
+
+.status{
+    margin-top:15px;
+    padding:12px;
+    border-radius:12px;
+    text-align:center;
+    font-weight:600;
+}
+
+.success{
+    background:rgba(34,197,94,.15);
+    color:#4ade80;
+}
+
+.warning{
+    background:rgba(239,68,68,.15);
+    color:#f87171;
+}
+
+@media(max-width:800px){
+    .dashboard{
+        grid-template-columns:1fr;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Zup yall <span>Calculadora de Nota final</span></h1>
+        <p>Calcula la nota necesaria en tu examen final.</p>
+    </div>
+
+    <div class="dashboard">
+
+        <div class="card">
+
+            <h2>Notas en los cortes</h2>
+
+            <div class="input-group">
+                <label>1mer corte (20%)</label>
+                <input type="number" id="g1" min="0" max="5" step="0.1">
+            </div>
+
+            <div class="input-group">
+                <label>2do corte (20%)</label>
+                <input type="number" id="g2" min="0" max="5" step="0.1">
+            </div>
+
+            <div class="input-group">
+                <label>3er corte (20%)</label>
+                <input type="number" id="g3" min="0" max="5" step="0.1">
+            </div>
+
+            <div class="input-group">
+                <label>Nota para pasar (la Asignatura/Materia)</label>
+                <input type="number" id="pass" value="3.0" min="0" max="5" step="0.1">
+            </div>
+
+            <button onclick="calculate()">
+                Calcular    
+            </button>
+
+        </div>
+
+        <div class="card">
+
+            <h2>Resultados</h2>
+
+            <div class="metric">
+                <div class="metric-title">Acumulado Actual</div>
+                <div class="metric-value" id="current">0.00</div>
+            </div>
+
+            <div class="metric">
+                <div class="metric-title">Nota Necesaria en el Examen Final</div>
+                <div class="metric-value" id="needed">0.00</div>
+            </div>
+
+            <div class="progress-container">
+                <div class="metric-title">
+                    Progreso hacia la nota de aprobación
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+            </div>
+
+            <div id="status" class="status">
+                Ingresa tus notas y presiona "Calcular" para ver tu progreso.
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+function calculate(){
+
+    const g1 = parseFloat(document.getElementById("g1").value)||0;
+    const g2 = parseFloat(document.getElementById("g2").value)||0;
+    const g3 = parseFloat(document.getElementById("g3").value)||0;
+    const pass = parseFloat(document.getElementById("pass").value);
+
+    const accumulated =
+        g1*0.20 +
+        g2*0.20 +
+        g3*0.20;
+
+    const needed =
+        (pass - accumulated) / 0.40;
+
+    document.getElementById("current")
+        .textContent = accumulated.toFixed(2);
+
+    document.getElementById("needed")
+        .textContent = needed.toFixed(2);
+
+    let progress =
+        (accumulated/pass)*100;
+
+    progress = Math.max(
+        0,
+        Math.min(progress,100)
+    );
+
+    document.getElementById("progress")
+        .style.width = progress + "%";
+
+    const status =
+        document.getElementById("status");
+
+    if(needed <= 0){
+
+        status.className =
+            "status success";
+
+        status.innerHTML =
+            "🎉 You already secured the passing grade!";
+
+    }
+    else if(needed > 5){
+
+        status.className =
+            "status warning";
+
+        status.innerHTML =
+            "❌ Passing is no longer possible. You would need more than 5.0.";
+
+    }
+    else{
+
+        status.className =
+            "status success";
+
+        status.innerHTML =
+            `📚 You need <strong>${needed.toFixed(2)}</strong> on the final exam to pass.`;
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
